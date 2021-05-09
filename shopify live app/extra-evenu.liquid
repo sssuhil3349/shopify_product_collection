@@ -1,0 +1,143 @@
+<section class="brew-avenue-section">
+    {% if section.settings.section_heading %}
+      <h1>{{ section.settings.section_heading }}</h1>
+    {% endif %}
+      {% assign collection = collections[section.settings.collection] %}
+   <div id="CollectionSection" data-section-id="{{ section.id }}" data-section-type="collection-template" data-sort-enabled="{{ section.settings.sort_enable }}" data-tags-enabled="{{ section.settings.tags_enable }}">
+  
+    <div class="grid-uniform grid-link__container" >
+      {% assign grid_item_width = 'wide--one-fifth large--one-quarter medium-down--one-half' %}
+      {%- assign product_width = 335 -%}
+  
+      {% for product in collection.products %}
+      
+        {% assign featured = product %}
+        <div class="grid__item {{grid_item_width}} ">
+          <div style="display:none">{% include 'product-grid-item' %}</div>
+          
+          <div class="product-img">
+            <img src="{{ product | img_url: 'medium' }}" />
+            </div>
+          
+          <div class="product-details">
+            <div class="product-title"><span>{{ product.title }}</span></div>
+          <div class="product-description">
+            <span class="product-content see-more-height">
+              {{ product.description }}
+            </span>
+   
+          </div>
+            <div class="product-price">
+              <span class="variant_price">{{ product.variants[0].price | money }}</span>
+              {% if product.compare_at_price != blank %}
+                <span class="variant_compare_price">{{ product.compare_at_price | money }}</span>
+                {% if product.compare_at_price > product.price %}
+                  <div class="save-price"><span class="save_price">(Save {{ product.variants[0].price | minus: product.variants[0].compare_at_price | money }})</span></div>
+                {% endif %}
+              {% endif %}           
+            </div>
+            {% form 'product', product, class:productform_class %}
+              {% for option in product.options_with_values %}
+            <div class="option-name"><span>SELECT {{ option.name | upcase}}</span></div>            
+              <select name="id" id="productSelect-option-{{ forloop.index0 }}" class="product-single__variants" style="display:block;">
+  
+                {% for variant in product.variants %}
+                  {% if variant.available %}
+                <option 
+                      {% if variant == product.selected_or_first_available_variant %} 
+                        selected="selected" 
+                      {% endif %} 
+                      data-sku="{{ variant.sku }}" 
+                      value="{{ variant.id }}"
+                 >
+                  {{ variant.title }} - {{ variant.price | money_with_currency }}
+                </option>
+  
+                  {% else %}
+                    <option 
+                        {% if variant == product.selected_or_first_available_variant %} 
+                            selected="selected" 
+                        {% endif %} 
+                            data-sku="{{ variant.sku }}" 
+                            value="{{ variant.id }}" 
+                            disabled="disabled"
+                     >
+                      {{ variant.title }} - {{ 'products.product.sold_out' | t }}
+                    </option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+            {% endfor %}
+              {% if variant.available %}
+              <button type="submit" name="add" id="AddToCart" class="btn {{ btn_class }}{% if section.settings.enable_payment_button and product.selling_plan_groups == empty %} btn--secondary{% endif %}">
+                <span id="AddToCartText">{{ 'products.product.add_to_cart' | t }}</span>
+              </button>
+              {% else %}
+              <div name="add" id="AddToCart" class="btn btn--secondary">
+                <span id="AddToCartText">{{ 'products.product.sold_out' | t }}</span>
+              </div>
+              {% endif %}
+            {% endform %}
+          </div>  
+          {% if section.settings.extra_note %}
+          <div><span>{{ section.settings.extra_note }}</span></div>
+        {% endif %}
+        </div>
+      {% else %}
+  
+        {% if shop.products_count == 0 %}
+          <div class="grid__item">
+            <div class="helper-section">
+              <div class="grid-uniform helper-content{% if section.settings.center_grid_link %} text-center{% endif %}">
+                {% for i in (1..8) %}
+                  <div class="grid__item one-half post-large--one-quarter">
+                    <a href="/admin/products" class="grid-link">
+                      <span class="grid-link__image grid-link__image--product">
+                        <span class="grid-link__image-centered">
+                          {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+                          {{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+                        </span>
+                      </span>
+                      <p class="grid-link__title">{{ 'home_page.onboarding.product_title' | t }}</p>
+                      <p class="grid-link__meta">
+                        <strong>$19.99</strong>
+                      </p>
+                    </a>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        {% else %}
+          <div class="grid__item">
+            <p><em>{{ 'collections.general.no_matches' | t }}</em></p>
+          </div>
+        {% endif %}
+      {% endfor %}
+      </div>
+    </div>
+  </section>
+  
+  {% schema %}
+    {
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "text",
+          "id": "section_heading",
+          "label": "Heading"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "collection"
+        },
+        {
+          "type": "richtext",
+          "id": "extra_note",
+          "label": "Text"
+        }
+      ]
+    }
+  {% endschema %}
+  

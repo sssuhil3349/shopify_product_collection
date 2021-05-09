@@ -1,0 +1,251 @@
+
+<section class="brew-avenue-section text-center">
+  {% if section.settings.section_heading %}
+    <h1>{{ section.settings.section_heading }}</h1>
+  {% endif %}
+   
+   {%- assign collection = collections[section.settings.collection] -%}
+  
+  
+ <div id="CollectionSection" data-section-id="{{ section.id }}" data-section-type="collection-template" data-sort-enabled="{{ section.settings.sort_enable }}" data-tags-enabled="{{ section.settings.tags_enable }}">
+
+  <div class="grid-uniform grid-link__container owl-carousel owl-theme" >
+    {% assign grid_item_width = 'wide--one-fifth large--one-quarter medium-down--one-half' %}
+    {%- assign product_width = 335 -%}
+
+    {% for product in collection.products %}
+    
+      {% assign featured = product %}
+      <div class="grid__item {{grid_item_width}} ">
+        <div style="display:none">{% include 'product-grid-item' %}</div>
+        
+        <div class="product-img">
+          <img src="{{ product | img_url: 'master' }}" />
+      	</div>
+        
+        <div class="product-details">
+          <div class="product-title">
+            <span>{{ product.title }}</span>
+          </div>
+          <div class="product-description">
+            <span class="product-content">
+              {{ product.description }}
+            </span>
+          </div>
+          <div class="product-price">
+            <span class="variant_price">{{ product.variants[0].price | money }}</span>
+            {% if product.compare_at_price != blank %}
+              <span class="variant_compare_price">{{ product.compare_at_price | money }}</span>
+              {% if product.compare_at_price > product.price %}
+                <div class="save-price"><span class="save_price">(Save {{ product.variants[0].price | minus: product.variants[0].compare_at_price | money }})</span></div>
+              {% endif %}
+            {% endif %}           
+          </div>
+          {% form 'product', product, class:productform_class %}
+			{% for option in product.options_with_values %}
+          <div class="option-name"><span>{{ option.name | upcase}}</span></div>            
+            <select name="id" id="productSelect-option-{{ forloop.index0 }}" class="product-single__variants" style="display:block;">
+
+              {% for variant in product.variants %}
+                {% if variant.available %}
+              <option 
+                    {% if variant == product.selected_or_first_available_variant %} 
+                      selected="selected" 
+                    {% endif %} 
+                    price="{{ variant.price | money_with_currency }}"
+                    {% if variant.compare_at_price != blank %}
+                      comparePrice="{{ variant.compare_at_price | money_with_currency }}" 
+                      {% if variant.compare_at_price > variant.price %}
+                        savePrice="{{ variant.compare_at_price | minus: variant.price | money_with_currency }}" 
+                      {% endif %}
+                    {% endif %}
+                    data-sku="{{ variant.sku }}" 
+                    value="{{ variant.id }}"
+               >
+                {{ variant.title }}
+              </option>
+
+                {% else %}
+                  <option 
+                      {% if variant == product.selected_or_first_available_variant %} 
+                          selected="selected" 
+                      {% endif %} 
+                          data-sku="{{ variant.sku }}" 
+                          value="{{ variant.id }}" 
+                          disabled="disabled"
+                   >
+                    {{ variant.title }} - {{ 'products.product.sold_out' | t }}
+                  </option>
+                {% endif %}
+              {% endfor %}
+            </select>
+          {% endfor %}
+            {% if variant.available %}
+            <button type="submit" name="add" id="AddToCart" class="btn {{ btn_class }}{% if section.settings.enable_payment_button and product.selling_plan_groups == empty %} btn--secondary{% endif %}">
+              <span id="AddToCartText">{{ 'products.product.add_to_cart' | t }}</span>
+            </button>
+    		{% else %}
+    		<div name="add" id="AddToCart" class="btn btn--secondary">
+              <span id="AddToCartText">{{ 'products.product.sold_out' | t }}</span>
+            </div>
+    		{% endif %}
+          {% endform %}
+        </div>  
+        {% if section.settings.extra_note %}
+        <div><span>{{ section.settings.extra_note }}</span></div>
+      {% endif %}
+      </div>
+    {% else %}
+
+      {% if shop.products_count == 0 %}
+        <div class="grid__item">
+          <div class="helper-section">
+            <div class="grid-uniform helper-content{% if section.settings.center_grid_link %} text-center{% endif %}">
+              {% for i in (1..8) %}
+                <div class="grid__item one-half post-large--one-quarter">
+                  <a href="/admin/products" class="grid-link">
+                    <span class="grid-link__image grid-link__image--product">
+                      <span class="grid-link__image-centered">
+                        {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+                        {{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+                      </span>
+                    </span>
+                    <p class="grid-link__title">{{ 'home_page.onboarding.product_title' | t }}</p>
+                    <p class="grid-link__meta">
+                      <strong>$19.99</strong>
+                    </p>
+                  </a>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <div class="grid__item">
+          <p><em>{{ 'collections.general.no_matches' | t }}</em></p>
+        </div>
+      {% endif %}
+    {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+  {
+    "name": "Collection",
+    "settings": [
+	  {
+		"type": "text",
+        "id": "section_heading",
+        "label": "Heading"
+      },
+      {
+		"type": "collection",
+        "id": "collection",
+        "label": "collection"
+      },
+	  {
+		"type": "richtext",
+        "id": "extra_note",
+        "label": "Text"
+      }
+	]
+     
+  }
+{% endschema %}
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" integrity="sha512-tS3S5qG0BlhnQROyJXvNjeEM4UpMXHrQfTGmbQ1gKmelCxlSEBUaxhRBj/EFTzpbP4RVSrpEikbmdJobCvhE3g==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.css" integrity="sha512-OTcub78R3msOCtY3Tc6FzeDJ8N9qvQn1Ph49ou13xgA9VsH9+LRxoFU6EqLhW4+PKRfU+/HReXmSZXHEkpYoOA==" crossorigin="anonymous" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw==" crossorigin="anonymous"></script>
+    <script>
+  $(document).ready(function(){
+    
+    $('.brew-avenue-section .owl-carousel').owlCarousel({
+    	loop:true,
+    	margin:10,
+    	responsiveClass:true,
+    	responsive:{
+      		0:{
+        		items:1,
+        		nav:true
+      		},
+      		600:{
+        		items:2,
+        		nav:false
+      		},
+      		1000:{
+        		items:3,
+      			nav:true,
+     		    loop:false
+      		}
+    	}
+  	})
+});
+      
+      
+      $(document).ready(function() {
+	(function() {
+    	var showChar = 170;
+    	var ellipsestext = "...";
+
+    	$(".brew-avenue-section .product-content").each(function() {
+      		var content = $(this).html();
+      		if (content.length > showChar) {
+        		var c = content.substr(0, showChar);
+        		var h = content;
+        		var html =
+          			'<div class="content-text" style="display:block">' +
+         			 c +
+          			'<span class="moreellipses">' +
+         			 ellipsestext +
+          			'&nbsp;&nbsp;<a href="#" class="moreless more">see more</a></span></span></div><div class="content-text" style="display:none">' +
+          			h +
+          			'<a href="#" class="moreless less">see less</a></span></div>';
+
+        		$(this).html(html);
+      		}
+    	});
+
+    	$(".brew-avenue-section .moreless").click(function() {
+    		var thisEl = $(this);
+      		var cT = thisEl.closest(".content-text");
+     	 	var tX = ".content-text";
+
+      		if (thisEl.hasClass("less")) {
+        		cT.toggle();
+        		cT.prev(tX).fadeToggle();
+     		} else {
+       	 		cT.toggle();
+        		cT.next(tX).fadeToggle();
+      		}
+      		return false;
+    	});
+  	})();
+});
+
+      
+      
+      
+$(document).ready(function(){
+    $(".brew-avenue-section select.product-single__variants").change(function(){
+        var variantPrice = $(this).children("option:selected").attr('price'); 
+        var comparePrice = $(this).children("option:selected").attr('comparePrice');
+		$('.brew-avenue-section .product-details').removeClass('bt-active');
+        $(this).parent().parent().addClass('bt-active');
+        $('.brew-avenue-section .bt-active .variant_price').text(variantPrice); 
+        
+      	if(comparePrice != ''){
+      		$('.brew-avenue-section .bt-active .variant_compare_price').text(comparePrice);
+        	if(comparePrice > variantPrice){
+          		var savePrice = $(this).children("option:selected").attr('savePrice');
+          		$('.brew-avenue-section .bt-active .save_price').text('(Save ' + savePrice + ')');
+        	}
+      	}
+    });
+});
+
+    </script>
+ 
