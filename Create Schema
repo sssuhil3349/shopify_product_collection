@@ -21,3 +21,115 @@
      
   }
 {% endschema %}
+
+
+==========================================================how to create schema in shopify============================================
+    
+   <h3> {{ section.settings.section_heading }} </h3><br>
+    <h3> {{ section.settings.extra_note }} </h3><br>
+    
+
+
+{% schema %}
+  {
+    "name": "26-6-21",
+    "settings": [
+	  {
+              "type": "text",
+        "id": "section_heading",
+        "label": "Heading"
+      },
+      {
+		"type": "collection",
+        "id": "collection",
+        "label": "collection"
+      },
+	  {
+		"type": "richtext",
+        "id": "extra_note",
+        "label": "Text"
+      },
+     {
+        "type": "color",
+        "id": "color_borders",
+        "label": "Border colors",
+        "default": "#e5e5e5"
+      },
+       {
+       "type": "radio",
+       "id": "logo_alignment",
+       "options": [
+          { "value": "left", "label": "Left"},
+          { "value": "center", "label": "Centered"}
+       ],
+       "label": "Logo alignment"
+       },
+       {
+       "type": "select",
+       "id": "vertical_alignment",
+       "options": [
+          { "value": "top", "label": "Top"},
+          { "value": "middle", "label": "Middle"},
+          { "value": "bottom", "label": "Bottom"}
+       ],
+       "label": "Vertical alignment"
+       },
+      {
+     "type": "checkbox",
+     "id": "home_page",
+     "default": true,
+     "label": "Home page only"
+		},
+       {
+    "type": "range",
+    "id": "font_size",
+    "min": 12,
+    "max": 18,
+    "step": 1,
+    "unit": "px",
+    "label": "Font size",
+    "default": 16
+     },
+     {
+    "type": "number",
+    "id": "products_per_customer",
+    "label": "Max products per customer",
+    "default": 4
+	},
+     {
+   "type": "color",
+   "id": "background_color",
+   "label": "Background color",
+   "default": "#ffffff"
+     },
+       {
+            "type": "font_picker",
+            "label": "Heading font",
+            "id": "heading_font",
+            "default": "helvetica_n4"
+        },
+      {
+     "type": "product",
+     "id": "feature_product",
+     "label": "Featured product"
+      },
+     {
+     "type": "blog",
+     "id": "sidebar_blog",
+     "label": "Blog for sidebar"
+	},
+     {
+     "type": "page",
+     "id": "homepage",
+     "label": "Front page"
+		},
+     {
+     "type": "link_list",
+     "id": "main_nav",
+     "label": "Main navigation"
+		}
+   
+	]
+     
+  }
+{% endschema %}
