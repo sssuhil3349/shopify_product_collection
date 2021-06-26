@@ -1,0 +1,13 @@
+
+
+   =============================================summary of shopify====================================
+   1)  Root file is the theme.liquid  All file include here
+   2)  Header and footer file also include here so they are look in every page beause theme.liquid file is the root file
+       {% section 'header' %}
+       {% section 'footer' %}
+   3)  {{ content_for_header }}    {{ content_for_layout }}  {{ content_for_index }}  this is the main    
+   4)  how to include section in template 
+        {% section '26-6-21' %}  ( 26-6-21.liquid  is section file)
+   5) how to include snippets in template 
+       {% include 'icon-arrow-left' %}  where icon-arrow-left.liquid  is the snippets file
+       
