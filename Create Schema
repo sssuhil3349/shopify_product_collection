@@ -1,3 +1,9 @@
+
+  # first All of we create schema in Section file 
+  # After That we include schema in template page  (No matter where you include section in template)
+  # how to include section in template like this =   {% section '26-6-21' %}   (26-6-21 is your section name)
+
+
 {% schema %}
   {
     "name": "Collection",
