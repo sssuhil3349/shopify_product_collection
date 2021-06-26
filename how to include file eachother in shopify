@@ -10,4 +10,12 @@
         {% section '26-6-21' %}  ( 26-6-21.liquid  is section file)
    5) how to include snippets in template 
        {% include 'icon-arrow-left' %}  where icon-arrow-left.liquid  is the snippets file
-       
+    
+   5) We have a assets folder which contain the css and js file Like below
+      example we have a css file like this sushil.css and we include this file in root folder theme.liquid
+      
+      <link rel="stylesheet" href="{{ 'sushil.css' | asset_url }}" type="text/css">
+      
+  6) as we include assets js file like above 
+  
+  #################   we can call any section file in any template page and when we customise it and select this page,  All section schema show inside page
