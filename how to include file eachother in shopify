@@ -19,3 +19,8 @@
   6) as we include assets js file like above 
   
   #################   we can call any section file in any template page and when we customise it and select this page,  All section schema show inside page
+
+====================================================={{ content_for_index }} ================================================
+   content for index is main for home page  which situated in templte folder inside index.liquid and it  render All home page content in main root file(theme.liquid)
+   
+   
