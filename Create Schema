@@ -1,0 +1,23 @@
+{% schema %}
+  {
+    "name": "Collection",
+    "settings": [
+	  {
+		"type": "text",
+        "id": "section_heading",
+        "label": "Heading"
+      },
+      {
+		"type": "collection",
+        "id": "collection",
+        "label": "collection"
+      },
+	  {
+		"type": "richtext",
+        "id": "extra_note",
+        "label": "Text"
+      }
+	]
+     
+  }
+{% endschema %}
